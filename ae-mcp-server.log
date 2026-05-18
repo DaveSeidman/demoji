@@ -1,0 +1,20 @@
+{"level":"info","message":"Using file-based communication bridge","timestamp":"2026-05-18T15:28:16.395Z"}
+{"level":"info","message":"Using Documents folder for file-based communication with prefix: codex_ae","timestamp":"2026-05-18T15:28:16.396Z"}
+{"level":"info","message":"Using client prefix from environment: codex_ae","timestamp":"2026-05-18T15:28:16.396Z"}
+{"level":"info","message":"Registered 92 tools","timestamp":"2026-05-18T15:28:16.396Z"}
+{"level":"info","message":"Adobe After Effects MCP server started in stdio mode","timestamp":"2026-05-18T15:28:16.397Z"}
+{"level":"info","message":"Using file-based bridge - no port conflicts!","timestamp":"2026-05-18T15:28:16.397Z"}
+{"capabilities":{"elicitation":{}},"clientInfo":{"name":"codex-mcp-client","title":"Codex","version":"0.130.0"},"level":"info","message":"Initializing MCP server...","protocolVersion":"2025-06-18","timestamp":"2026-05-18T15:28:16.398Z"}
+{"level":"info","message":"Using Documents folder for file-based communication with prefix: codex-mcp-client_0_130_0_57102_mpbcz8y6","timestamp":"2026-05-18T15:28:16.398Z"}
+{"level":"info","message":"Initialized with client prefix: codex-mcp-client_0_130_0_57102_mpbcz8y6","timestamp":"2026-05-18T15:28:16.399Z"}
+{"level":"info","message":"Server initialized","timestamp":"2026-05-18T15:28:16.399Z"}
+{"level":"info","message":"Using file-based communication bridge","timestamp":"2026-05-18T15:28:43.990Z"}
+{"level":"info","message":"Using Documents folder for file-based communication with prefix: codex_ae","timestamp":"2026-05-18T15:28:43.992Z"}
+{"level":"info","message":"Using client prefix from environment: codex_ae","timestamp":"2026-05-18T15:28:43.992Z"}
+{"level":"info","message":"Registered 92 tools","timestamp":"2026-05-18T15:28:43.992Z"}
+{"level":"info","message":"Adobe After Effects MCP server started in stdio mode","timestamp":"2026-05-18T15:28:43.992Z"}
+{"level":"info","message":"Using file-based bridge - no port conflicts!","timestamp":"2026-05-18T15:28:43.992Z"}
+{"capabilities":{"elicitation":{}},"clientInfo":{"name":"codex-mcp-client","title":"Codex","version":"0.130.0"},"level":"info","message":"Initializing MCP server...","protocolVersion":"2025-06-18","timestamp":"2026-05-18T15:28:43.994Z"}
+{"level":"info","message":"Using Documents folder for file-based communication with prefix: codex-mcp-client_0_130_0_57813_mpbczu8q","timestamp":"2026-05-18T15:28:43.994Z"}
+{"level":"info","message":"Initialized with client prefix: codex-mcp-client_0_130_0_57813_mpbczu8q","timestamp":"2026-05-18T15:28:43.994Z"}
+{"level":"info","message":"Server initialized","timestamp":"2026-05-18T15:28:43.995Z"}

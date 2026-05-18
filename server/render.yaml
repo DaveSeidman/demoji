@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: demojis-api
+    env: node
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: FAL_KEY
+        sync: false
+      - key: FAL_MODEL_ID
+        value: fal-ai/nano-banana
+      - key: CLIENT_ORIGIN
+        sync: false
