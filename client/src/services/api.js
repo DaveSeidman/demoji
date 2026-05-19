@@ -1,18 +1,5 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
-function getVoterId() {
-  const storageKey = 'demojis:voter-id';
-  const existing = window.localStorage.getItem(storageKey);
-
-  if (existing) {
-    return existing;
-  }
-
-  const created = window.crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`;
-  window.localStorage.setItem(storageKey, created);
-  return created;
-}
-
 async function request(path, options = {}) {
   let response;
 
@@ -21,7 +8,6 @@ async function request(path, options = {}) {
       ...options,
       headers: {
         'Content-Type': 'application/json',
-        'x-voter-id': getVoterId(),
         ...(options.headers || {})
       }
     });

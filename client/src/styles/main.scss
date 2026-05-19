@@ -614,7 +614,6 @@ button:disabled {
   margin-bottom: 6px;
 }
 
-.demoji_card_style,
 .demoji_card_model {
   display: inline-flex;
   align-items: center;
@@ -887,15 +886,6 @@ button:disabled {
   font-weight: 900;
 }
 
-.creation_options {
-  display: flex;
-  align-items: end;
-  justify-content: center;
-  gap: 12px;
-  width: min(460px, 100%);
-  margin-top: 18px;
-}
-
 .creation_progress {
   display: grid;
   justify-items: center;
@@ -1133,7 +1123,6 @@ button:disabled {
     min-height: 48px;
   }
 
-  .creation_options,
   .editor_actions {
     display: grid;
     grid-template-columns: 1fr;

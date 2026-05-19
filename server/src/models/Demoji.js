@@ -22,8 +22,8 @@ const demojiSchema = new mongoose.Schema(
     },
     styleSet: {
       type: String,
-      enum: ['apple', 'google', 'microsoft', 'samsung', 'twitter', 'unicode'],
-      default: 'apple'
+      enum: ['standard', 'apple', 'google', 'microsoft', 'samsung', 'twitter', 'unicode'],
+      default: 'standard'
     },
     imageUrl: {
       type: String,

@@ -59,11 +59,11 @@ function withTimeout(promise, timeoutMs, label) {
   return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timeout));
 }
 
-export async function generateDemojiImage({ prompt, styleSet, refinement = '' }) {
+export async function generateDemojiImage({ prompt, styleSet = 'standard', refinement = '' }) {
   const startedAt = Date.now();
   const generationPrompt = [
     `Create a brand-new emoji for: ${prompt}.`,
-    `Match the visual language of the ${styleSet} emoji set: rounded, polished, high contrast, simple shapes, clean lighting, and a centered subject.`,
+    'Use a modern production emoji style: rounded, polished, high contrast, simple shapes, clean lighting, and a centered subject.',
     'Design it like a real Unicode emoji asset that must remain readable at 16px favicon size.',
     'Use one clear object or character pose, minimal micro-detail, bold silhouette, and simplified materials.',
     'Do not add an enclosing circle, circular badge, ring, border, sticker outline, scenic background, text, watermark, or extra decorative elements.',

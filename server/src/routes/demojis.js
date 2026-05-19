@@ -17,7 +17,7 @@ function makeSlug(prompt) {
 }
 
 function getFingerprint(req) {
-  return req.headers['x-voter-id'] || req.ip || 'anonymous';
+  return `ip:${req.ip || req.socket?.remoteAddress || 'unknown'}`;
 }
 
 function escapeRegex(value) {
@@ -28,7 +28,7 @@ function getSubmissionPayload(body) {
   return {
     prompt: String(body.prompt || '').trim(),
     description: String(body.description || '').trim(),
-    styleSet: String(body.styleSet || 'apple').trim(),
+    styleSet: String(body.styleSet || 'standard').trim(),
     refinement: String(body.refinement || '').trim(),
     imageUrl: String(body.imageUrl || '').trim(),
     generationModel: String(body.generationModel || '').trim()

@@ -1,13 +1,5 @@
 import { Send, WandSparkles } from 'lucide-react';
 
-const styleOptions = [
-  { value: 'apple', label: 'Apple' },
-  { value: 'google', label: 'Google' },
-  { value: 'microsoft', label: 'Microsoft' },
-  { value: 'samsung', label: 'Samsung' },
-  { value: 'twitter', label: 'Twitter' }
-];
-
 export function SubmissionForm({
   form,
   draft,
@@ -82,21 +74,9 @@ export function SubmissionForm({
             </button>
           </div>
 
-          <div className="creation_options">
-            <label className="field field_compact">
-              <span className="field_label">Style</span>
-              <select className="field_select" name="styleSet" value={form.styleSet} onChange={onChange}>
-                {styleOptions.map((style) => (
-                  <option key={style.value} value={style.value}>
-                    {style.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <button className="button button_ghost" type="button" onClick={onCheck} disabled={isChecking || !form.prompt.trim()}>
-              Check only
-            </button>
-          </div>
+          <button className="button button_ghost check_button" type="button" onClick={onCheck} disabled={isChecking || !form.prompt.trim()}>
+            Check only
+          </button>
 
           {checkResult ? (
             <div className={canGenerate ? 'submission_notice submission_notice_good' : 'submission_notice submission_notice_blocked'}>

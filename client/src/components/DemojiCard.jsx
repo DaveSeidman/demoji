@@ -11,7 +11,6 @@ export function DemojiCard({ demoji, onVote, isVoting }) {
       </div>
       <div className="demoji_card_body">
         <div className="demoji_card_meta">
-          <span className="demoji_card_style">{demoji.styleSet}</span>
           <span className="demoji_card_model">
             <Sparkles size={14} aria-hidden="true" />
             AI

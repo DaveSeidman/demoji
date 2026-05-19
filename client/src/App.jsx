@@ -7,8 +7,7 @@ import { checkDemoji, createDemoji, fetchDemojis, previewDemoji, voteForDemoji }
 
 const initialForm = {
   prompt: '',
-  description: '',
-  styleSet: 'apple'
+  description: ''
 };
 
 function getInitialTheme() {
@@ -83,7 +82,7 @@ export default function App() {
     const { name, value } = event.target;
     setForm((current) => ({ ...current, [name]: value }));
     setCheckResult(null);
-    if (name === 'prompt' || name === 'styleSet') {
+    if (name === 'prompt') {
       setDraft(null);
     }
     setStatus('');
