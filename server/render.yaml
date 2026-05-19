@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: demojis-api
+    name: demomojis-api
     env: node
     rootDir: server
     buildCommand: npm install

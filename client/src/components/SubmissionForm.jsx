@@ -1,4 +1,4 @@
-import { RefreshCw, Send, WandSparkles } from 'lucide-react';
+import { Send, WandSparkles } from 'lucide-react';
 
 const styleOptions = [
   { value: 'apple', label: 'Apple' },
@@ -28,7 +28,7 @@ export function SubmissionForm({
   const canGenerate = checkResult?.canGenerate !== false;
   const hasDraft = Boolean(draft?.imageUrl);
   const progressPercent = progress ? Math.round((progress.step / progress.totalSteps) * 100) : 0;
-  const progressLabel = progress?.label || 'Generating draft';
+  const progressLabel = progress?.label || 'Generating emoji';
 
   function handleFormSubmit(event) {
     event.preventDefault();
@@ -49,7 +49,7 @@ export function SubmissionForm({
         </div>
         <div className="creation_progress_text">
           <h2 className="creation_progress_title">{progressLabel}</h2>
-          <p className="creation_progress_detail">{progress?.detail || 'Waiting for the image generator.'}</p>
+          <p className="creation_progress_detail">{progress?.detail || 'Generating your emoji image.'}</p>
         </div>
       </div>
     );
@@ -61,7 +61,7 @@ export function SubmissionForm({
         <>
           <div className="creation_intro">
             <h2 className="creation_title">What emoji is missing?</h2>
-            <p className="creation_copy">Start with the noun or situation. Existing emoji are checked before generation.</p>
+            <p className="creation_copy">Start with the emoji idea. Existing emoji are checked before generation.</p>
           </div>
 
           <div className="prompt_composer">
@@ -119,64 +119,54 @@ export function SubmissionForm({
             </div>
           </div>
 
-          {progress ? (
-            <div className={progress.failed ? 'progress progress_failed' : 'progress'} role="status">
-              <div className="progress_header">
-                <span className="progress_label">{progress.label}</span>
-                <span className="progress_time">{progress.failed ? 'Stopped' : progress.active ? `${elapsedSeconds}s` : 'Done'}</span>
+          <div className="editor_controls">
+            {progress ? (
+              <div className={progress.failed ? 'progress progress_failed' : 'progress'} role="status">
+                <div className="progress_header">
+                  <span className="progress_label">{progress.label}</span>
+                  <span className="progress_time">{progress.failed ? 'Stopped' : progress.active ? `${elapsedSeconds}s` : 'Done'}</span>
+                </div>
+                <div className="progress_track" aria-hidden="true">
+                  <div className="progress_fill" style={{ width: `${progressPercent}%` }} />
+                </div>
               </div>
-              <div className="progress_track" aria-hidden="true">
-                <div className="progress_fill" style={{ width: `${progressPercent}%` }} />
+            ) : null}
+
+            <div className="editor_fields">
+              <div className="refinement_control">
+                <label className="field refinement_control_field">
+                  <span className="field_label">Refinement notes</span>
+                  <textarea
+                    className="field_textarea field_textarea_compact"
+                    value={refinement}
+                    onChange={(event) => onRefinementChange(event.target.value)}
+                    placeholder="Simpler silhouette, no circle, less detail, larger main shape..."
+                    maxLength="260"
+                    rows="2"
+                  />
+                </label>
+                <button
+                  className="button button_primary button_refine"
+                  type="button"
+                  onClick={onGenerateDraft}
+                  disabled={isGeneratingPreview || !canGenerate || !form.prompt.trim()}
+                >
+                  Refine
+                </button>
               </div>
-              <div className="progress_detail">{progress.detail}</div>
+
             </div>
-          ) : null}
 
-          <div className="editor_fields">
-            <label className="field">
-              <span className="field_label">Refinement notes</span>
-              <textarea
-                className="field_textarea field_textarea_compact"
-                value={refinement}
-                onChange={(event) => onRefinementChange(event.target.value)}
-                placeholder="Simpler silhouette, no circle, less detail, larger main shape..."
-                maxLength="260"
-                rows="3"
-              />
-            </label>
+            <div className="editor_actions">
+              <button className="button button_ghost" type="button" onClick={onReset}>
+                Start over
+              </button>
 
-            <label className="field">
-              <span className="field_label">Situation or emotion</span>
-              <textarea
-                className="field_textarea field_textarea_compact"
-                name="description"
-                value={form.description}
-                onChange={onChange}
-                placeholder="A tiny note for voters about when this demoji should be used."
-                maxLength="280"
-                rows="3"
-              />
-            </label>
-          </div>
-
-          <div className="editor_actions">
-            <button className="button button_ghost" type="button" onClick={onReset}>
-              Start over
-            </button>
-            <button
-              className="button button_ghost"
-              type="button"
-              onClick={onGenerateDraft}
-              disabled={isGeneratingPreview || !canGenerate || !form.prompt.trim()}
-            >
-              <RefreshCw size={18} aria-hidden="true" />
-              Regenerate
-            </button>
-
-            <button className="button button_primary" type="submit" disabled={isSubmitting || !canGenerate}>
-              <Send size={18} aria-hidden="true" />
-              {isSubmitting ? 'Submitting...' : 'Submit to pool'}
-            </button>
+              <button className="button button_primary" type="submit" disabled={isSubmitting || !canGenerate}>
+                <Send size={18} aria-hidden="true" />
+                {isSubmitting ? 'Submitting...' : 'Submit to pool'}
+              </button>
+            </div>
           </div>
         </div>
       )}

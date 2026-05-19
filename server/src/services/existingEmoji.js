@@ -2,13 +2,19 @@ import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const emojiBySymbol = require('unicode-emoji-json/data-by-emoji.json');
+const emojiAnnotations = require('emojibase-data/en/data.json');
 
 const aliases = new Map([
+  ['arena', 'stadium'],
   ['bike', 'bicycle'],
   ['bicep', 'flexed biceps'],
   ['biceps', 'flexed biceps'],
+  ['ball park', 'stadium'],
+  ['ballpark', 'stadium'],
   ['burger', 'hamburger'],
   ['ice skates', 'ice skate'],
+  ['theatre', 'performing arts'],
+  ['theater', 'performing arts'],
   ['plane', 'airplane'],
   ['roller skates', 'roller skate'],
   ['smiley', 'smiling face']
@@ -62,10 +68,42 @@ function buildExistingEmojiConcepts() {
     addConcept(concepts, data.slug?.replace(/_/g, ' '), emoji, data.name);
   }
 
+  for (const data of emojiAnnotations) {
+    addConcept(concepts, data.label, data.emoji, data.label);
+
+    for (const tag of data.tags || []) {
+      addConcept(concepts, tag, data.emoji, data.label);
+    }
+  }
+
   return concepts;
 }
 
 const existingEmojiConcepts = buildExistingEmojiConcepts();
+const existingEmojiBySymbol = new Map();
+const standardEmojiCatalog = emojiAnnotations.map((data) => ({
+  id: data.hexcode,
+  emoji: data.emoji,
+  name: data.label,
+  tags: data.tags || []
+}));
+const standardEmojiById = new Map();
+
+for (const match of existingEmojiConcepts.values()) {
+  existingEmojiBySymbol.set(normalizeEmoji(match.emoji), match);
+}
+
+for (const item of standardEmojiCatalog) {
+  standardEmojiById.set(item.id, {
+    emoji: item.emoji,
+    name: item.name,
+    concept: normalizeConcept(item.name)
+  });
+}
+
+function normalizeEmoji(value) {
+  return String(value || '').replace(/\uFE0E|\uFE0F/g, '');
+}
 
 export function normalizeConcept(value) {
   return String(value)
@@ -79,8 +117,9 @@ export function normalizeConcept(value) {
 
 export function findExistingEmojiConcept(value) {
   const normalized = normalizeConcept(value);
-  const canonical = aliases.get(normalized) || singularize(normalized);
-  const match = existingEmojiConcepts.get(canonical);
+  const aliased = aliases.get(normalized);
+  const canonical = aliased || normalized;
+  const match = existingEmojiConcepts.get(canonical) || existingEmojiConcepts.get(singularize(canonical));
 
   if (match) {
     return {
@@ -94,7 +133,31 @@ export function findExistingEmojiConcept(value) {
 
   return {
     exists: false,
-    concept: canonical,
+    concept: singularize(canonical),
     reason: ''
   };
+}
+
+export function findExistingEmojiSuggestion({ emoji, name }) {
+  const byEmoji = existingEmojiBySymbol.get(normalizeEmoji(emoji));
+
+  if (byEmoji) {
+    return byEmoji;
+  }
+
+  const normalizedName = normalizeConcept(name);
+
+  if (!normalizedName) {
+    return null;
+  }
+
+  return existingEmojiConcepts.get(normalizedName) || existingEmojiConcepts.get(singularize(normalizedName)) || null;
+}
+
+export function findStandardEmojiById(id) {
+  return standardEmojiById.get(id) || null;
+}
+
+export function getStandardEmojiCatalog() {
+  return standardEmojiCatalog;
 }

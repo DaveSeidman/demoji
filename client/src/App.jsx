@@ -61,8 +61,10 @@ export default function App() {
   }, [theme]);
 
   useEffect(() => {
-    loadDemojis();
-  }, [loadDemojis]);
+    if (activeView === 'vote') {
+      loadDemojis();
+    }
+  }, [activeView, loadDemojis]);
 
   useEffect(() => {
     if (!progress?.active) {
@@ -154,6 +156,12 @@ export default function App() {
     } catch (requestError) {
       setError(requestError.message);
       setFailedProgress('Check failed', requestError.message);
+      if (requestError.payload?.existingStandard) {
+        setCheckResult({
+          canGenerate: false,
+          existingStandard: requestError.payload.existingStandard
+        });
+      }
       return null;
     } finally {
       setIsChecking(false);
@@ -171,7 +179,7 @@ export default function App() {
     }
 
     setIsGeneratingPreview(true);
-    setActiveProgress(2, 3, 'Generating draft', 'Waiting for Nano Banana to return an emoji image.');
+    setActiveProgress(2, 3, 'Generating draft', 'Generating your emoji image.');
 
     try {
       const data = await previewDemoji({
@@ -185,6 +193,12 @@ export default function App() {
     } catch (requestError) {
       setError(requestError.message);
       setFailedProgress('Generation failed', requestError.message);
+      if (requestError.payload?.existingStandard) {
+        setCheckResult({
+          canGenerate: false,
+          existingStandard: requestError.payload.existingStandard
+        });
+      }
       if (requestError.payload?.existingSubmission) {
         setCheckResult({
           canGenerate: false,
@@ -234,6 +248,12 @@ export default function App() {
     } catch (requestError) {
       setError(requestError.message);
       setFailedProgress('Submit failed', requestError.message);
+      if (requestError.payload?.existingStandard) {
+        setCheckResult({
+          canGenerate: false,
+          existingStandard: requestError.payload.existingStandard
+        });
+      }
       if (requestError.payload?.existingSubmission) {
         setCheckResult({
           canGenerate: false,
@@ -267,9 +287,9 @@ export default function App() {
   return (
     <main className="app">
       <header className="app_header">
-        <nav className="app_nav" aria-label="Demoji's navigation">
+        <nav className="app_nav" aria-label="Demomojis navigation">
           <div className="brand">
-            <h1 className="brand_title">Demoji's</h1>
+            <h1 className="brand_title">Demomojis</h1>
             <p className="brand_subtitle">The proving ground for the next generation of emojis</p>
           </div>
           <div className="app_controls">

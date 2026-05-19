@@ -4,6 +4,7 @@ import { Demoji } from '../models/Demoji.js';
 import { findExistingEmojiConcept, normalizeConcept } from '../services/existingEmoji.js';
 import { generateDemojiImage } from '../services/fal.js';
 import { logError, logInfo } from '../services/logger.js';
+import { suggestSemanticEmojiMatch } from '../services/semanticEmojiMatch.js';
 
 export const demojisRouter = express.Router();
 
@@ -44,9 +45,28 @@ function validatePrompt(prompt) {
 
 async function getAvailability(prompt) {
   const slug = makeSlug(prompt);
+
+  logInfo(`user requested "${prompt}", first checking emoji`, {
+    prompt,
+    slug
+  });
+
+  logInfo('emoji.availability.start', {
+    prompt,
+    slug,
+    step: 'checking_standard_emoji_exact'
+  });
+
   const existingStandard = findExistingEmojiConcept(prompt);
 
   if (existingStandard.exists) {
+    logInfo('emoji.availability.standard_exact_match', {
+      prompt,
+      slug,
+      emoji: existingStandard.emoji,
+      unicodeName: existingStandard.unicodeName
+    });
+
     return {
       slug,
       canGenerate: false,
@@ -56,9 +76,20 @@ async function getAvailability(prompt) {
     };
   }
 
+  logInfo('emoji.availability.check_pool_exact', {
+    prompt,
+    slug
+  });
+
   const existingSubmission = await Demoji.findOne({ slug });
 
   if (existingSubmission) {
+    logInfo('emoji.availability.pool_exact_match', {
+      prompt,
+      slug,
+      existingId: existingSubmission._id
+    });
+
     return {
       slug,
       canGenerate: false,
@@ -68,9 +99,65 @@ async function getAvailability(prompt) {
     };
   }
 
+  logInfo('emoji.availability.check_semantic', {
+    prompt,
+    slug,
+    step: 'checking_standard_emoji_then_pool_semantic'
+  });
+
+  const poolCandidates = await Demoji.find({})
+    .sort({ votes: -1, createdAt: -1 })
+    .limit(80)
+    .select('prompt description votes')
+    .lean();
+  const semanticMatch = await suggestSemanticEmojiMatch({ prompt, poolCandidates });
+
+  if (semanticMatch?.standardMatch) {
+    const { standardMatch } = semanticMatch;
+
+    logInfo('emoji.availability.standard_semantic_match', {
+      prompt,
+      slug,
+      emoji: standardMatch.emoji,
+      unicodeName: standardMatch.name
+    });
+
+    return {
+      slug,
+      canGenerate: false,
+      status: 409,
+      message: 'That idea appears to already exist as a standard emoji.',
+      existingStandard: {
+        exists: true,
+        concept: standardMatch.concept,
+        emoji: standardMatch.emoji,
+        unicodeName: standardMatch.name,
+        reason: `This appears to already exist as ${standardMatch.emoji} ${standardMatch.name}.`
+      }
+    };
+  }
+
+  if (semanticMatch?.poolMatch) {
+    logInfo('emoji.availability.pool_semantic_match', {
+      prompt,
+      slug,
+      existingId: semanticMatch.poolMatch._id
+    });
+
+    return {
+      slug,
+      canGenerate: false,
+      status: 409,
+      message: 'A similar Demomoji is already in the voting pool.',
+      existingSubmission: semanticMatch.poolMatch
+    };
+  }
+
   return {
     slug,
-    canGenerate: true
+    canGenerate: true,
+    existingStandard,
+    existingSubmission: null
   };
 }
 
@@ -119,22 +206,20 @@ demojisRouter.get('/check', async (req, res, next) => {
       return res.status(400).json({ message: 'A prompt is required.' });
     }
 
-    const slug = makeSlug(prompt);
-    const existingStandard = findExistingEmojiConcept(prompt);
-    const existingSubmission = await Demoji.findOne({ slug });
+    const availability = await getAvailability(prompt);
 
     logInfo('demojis.check.success', {
       prompt,
-      slug,
-      existingStandard: existingStandard.exists,
-      existingSubmission: Boolean(existingSubmission),
+      slug: availability.slug,
+      existingStandard: Boolean(availability.existingStandard?.exists),
+      existingSubmission: Boolean(availability.existingSubmission),
       elapsedMs: Date.now() - startedAt
     });
 
     res.json({
-      canGenerate: !existingStandard.exists && !existingSubmission,
-      existingStandard,
-      existingSubmission
+      canGenerate: availability.canGenerate,
+      existingStandard: availability.existingStandard,
+      existingSubmission: availability.existingSubmission
     });
   } catch (error) {
     logError('demojis.check.failed', error, {
@@ -301,7 +386,7 @@ demojisRouter.patch('/:id/vote', async (req, res, next) => {
         elapsedMs: Date.now() - startedAt
       });
 
-      return res.status(404).json({ message: 'Demoji not found.' });
+      return res.status(404).json({ message: 'Demomoji not found.' });
     }
 
     if (demoji.voteFingerprints.includes(fingerprint)) {

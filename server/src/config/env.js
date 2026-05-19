@@ -14,5 +14,7 @@ export const env = {
   clientOrigin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
   falKey: process.env.FAL_KEY || '',
   falModelId: process.env.FAL_MODEL_ID || 'fal-ai/nano-banana',
-  falTimeoutMs: Number(process.env.FAL_TIMEOUT_MS || 120000)
+  falTimeoutMs: Number(process.env.FAL_TIMEOUT_MS || 120000),
+  openaiApiKey: process.env.OPENAI_API_KEY || '',
+  openaiModel: process.env.OPENAI_MODEL || 'gpt-4o-mini'
 };

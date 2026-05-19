@@ -1,7 +1,7 @@
 :root {
   color-scheme: light;
   font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    Manrope, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   line-height: 1.5;
   font-weight: 400;
   letter-spacing: 0;
@@ -51,6 +51,12 @@ body {
   min-height: 100vh;
   color: var(--text);
   background: var(--bg);
+}
+
+html,
+body,
+#root {
+  height: 100%;
 }
 
 button,
@@ -510,6 +516,7 @@ button:disabled {
 .pool_grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-content: start;
   gap: 16px;
 }
 
@@ -550,8 +557,9 @@ button:disabled {
 .demoji_card {
   position: relative;
   display: grid;
-  grid-template-rows: auto 1fr auto;
-  min-height: 100%;
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  aspect-ratio: 1;
+  min-height: 0;
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -562,7 +570,7 @@ button:disabled {
   position: relative;
   display: grid;
   place-items: center;
-  aspect-ratio: 1;
+  min-height: 0;
   background:
     linear-gradient(135deg, color-mix(in srgb, var(--panel_strong) 88%, transparent), transparent),
     var(--panel);
@@ -595,7 +603,7 @@ button:disabled {
 }
 
 .demoji_card_body {
-  padding: 16px 16px 12px;
+  padding: 12px 14px 8px;
 }
 
 .demoji_card_meta {
@@ -603,7 +611,7 @@ button:disabled {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 }
 
 .demoji_card_style,
@@ -619,7 +627,7 @@ button:disabled {
 
 .demoji_card_title {
   margin: 0;
-  font-size: 1.18rem;
+  font-size: 1rem;
   line-height: 1.22;
   overflow-wrap: anywhere;
 }
@@ -629,11 +637,12 @@ button:disabled {
   color: var(--muted);
   font-size: 0.95rem;
   overflow-wrap: anywhere;
+  display: none;
 }
 
 .demoji_card_vote {
-  min-height: 48px;
-  margin: 0 16px 16px;
+  min-height: 40px;
+  margin: 0 14px 14px;
   color: var(--primary_dark);
   border-color: color-mix(in srgb, var(--primary) 38%, var(--border));
   background: color-mix(in srgb, var(--primary) 8%, var(--bg));
@@ -700,8 +709,10 @@ button:disabled {
 
 .app {
   width: min(1160px, calc(100% - 40px));
-  min-height: 100vh;
-  padding: 22px 0 48px;
+  height: 100svh;
+  min-height: 640px;
+  padding: 16px 0 14px;
+  overflow: hidden;
 }
 
 .app_header {
@@ -715,14 +726,15 @@ button:disabled {
 
 .brand_title {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: 1rem;
+  font-weight: 800;
   line-height: 1.1;
 }
 
 .brand_subtitle {
   margin: 4px 0 0;
   color: var(--muted);
-  font-size: 0.84rem;
+  font-size: 0.8rem;
 }
 
 .app_controls {
@@ -760,14 +772,20 @@ button:disabled {
 .create_view {
   display: grid;
   place-items: center;
-  min-height: calc(100vh - 94px);
-  padding: 28px 0;
+  height: calc(100svh - 66px);
+  min-height: 560px;
+  padding: 10px 0 0;
+  overflow: hidden;
 }
 
 .vote_view {
   display: grid;
-  gap: 20px;
-  padding-top: 58px;
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+  gap: 16px;
+  height: calc(100svh - 78px);
+  min-height: 590px;
+  padding-top: 34px;
+  overflow: hidden;
 }
 
 .vote_header {
@@ -803,35 +821,36 @@ button:disabled {
   justify-items: center;
   align-content: center;
   max-width: 760px;
-  min-height: 58vh;
+  min-height: 52vh;
 }
 
 .submission_editor {
-  max-width: 760px;
+  max-width: 900px;
 }
 
 .creation_intro {
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   text-align: center;
 }
 
 .creation_title {
   margin: 0;
-  font-size: 2.2rem;
+  font-size: 2rem;
+  font-weight: 800;
   line-height: 1.08;
 }
 
 .creation_copy {
   max-width: 520px;
-  margin: 12px auto 0;
+  margin: 10px auto 0;
   color: var(--muted);
-  font-size: 1rem;
+  font-size: 0.98rem;
 }
 
 .prompt_composer {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  width: min(680px, 100%);
+  width: min(560px, 100%);
   min-height: 68px;
   padding: 6px;
   border: 1px solid var(--border);
@@ -848,7 +867,7 @@ button:disabled {
   color: var(--text);
   background: transparent;
   font-size: 1.35rem;
-  text-align: center;
+  text-align: left;
 }
 
 .prompt_composer_input::placeholder {
@@ -933,8 +952,8 @@ button:disabled {
 
 .editor {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
-  gap: 32px;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 350px);
+  gap: 24px;
   align-items: center;
   margin-top: 0;
   padding-top: 0;
@@ -951,7 +970,7 @@ button:disabled {
   position: relative;
   display: grid;
   place-items: center;
-  width: min(440px, 100%);
+  width: min(330px, 100%);
   aspect-ratio: 1;
   margin: 0 auto;
 }
@@ -961,17 +980,62 @@ button:disabled {
   height: 82%;
 }
 
+.editor_controls,
 .editor_fields {
   display: grid;
-  gap: 4px;
+  gap: 8px;
+}
+
+.editor_controls {
+  align-content: center;
 }
 
 .editor_actions {
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
 }
 
 .editor_actions .button_primary {
-  grid-column: 1 / -1;
+  grid-column: auto;
+}
+
+.refinement_control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 96px;
+  gap: 8px;
+  align-items: end;
+}
+
+.refinement_control_field {
+  margin-bottom: 0;
+}
+
+.button_refine {
+  min-height: 68px;
+  font-size: 1rem;
+}
+
+.field_tight {
+  margin-bottom: 0;
+}
+
+.field_textarea_compact {
+  min-height: 68px;
+}
+
+.editor_actions {
+  gap: 8px;
+}
+
+.button {
+  min-height: 42px;
+}
+
+.progress {
+  padding: 10px;
+}
+
+.progress_detail {
+  display: none;
 }
 
 .floating_notice {
@@ -1002,7 +1066,10 @@ button:disabled {
 }
 
 .pool_grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(190px, 1fr));
+  min-height: 0;
+  overflow: auto;
+  padding: 1px 2px 4px;
 }
 
 .demoji_card {

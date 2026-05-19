@@ -1,8 +1,9 @@
-# Demoji's
+# Demomojis
 
-Demoji's is a React and Mongo-backed voting pool for AI-generated emoji ideas that do not exist yet.
+Demomojis is a React and Mongo-backed voting pool for AI-generated emoji ideas that do not exist yet.
 
-The server checks proposed ideas against Unicode emoji names before generating, then checks the local submission pool for duplicates.
+The server checks proposed ideas against Unicode emoji names and keyword annotations before generating, then checks the local submission pool for duplicates.
+If `OPENAI_API_KEY` is configured, it also runs a semantic preflight to suggest close existing Unicode emoji first, then close existing Demomojis from the voting pool.
 
 ## Structure
 
@@ -23,10 +24,13 @@ The server runs on `http://localhost:4000` by default. The client runs on Vite's
 
 For Atlas, copy the connection string from **Database > Connect > Drivers**. The host must be your real cluster host, such as `cluster0.abjpsxc.mongodb.net`, not the placeholder `cluster.mongodb.net`. Replace `<db_password>` with the password for that database user and add `/demojis` after `.net` so Mongoose uses a named database.
 
+If the server logs an Atlas IP allowlist error, open Atlas **Network Access**, add your current IP address, then restart `npm run dev:server`. For short local testing only, Atlas also allows `0.0.0.0/0`, but that permits connections from any IP and should not be used casually.
+
 ## Deployment
 
 - Deploy `server` as a Render web service. Set `MONGODB_URI`, `FAL_KEY`, `CLIENT_ORIGIN`, and optional `FAL_MODEL_ID`.
 - Set `FAL_TIMEOUT_MS` if image generation needs more or less than the default 120 seconds.
+- Set `OPENAI_API_KEY` and optional `OPENAI_MODEL` to enable semantic preflight matching before image generation.
 - Deploy `client/dist` to GitHub Pages. Set `VITE_API_URL` to the Render service URL before building.
 
 ## API

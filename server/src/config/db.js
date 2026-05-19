@@ -27,6 +27,19 @@ function validateMongoUri(uri) {
   }
 }
 
+function getServerSelectionDetails(error) {
+  if (!error.reason?.servers) {
+    return [];
+  }
+
+  return Array.from(error.reason.servers.entries()).map(([address, server]) => ({
+    address,
+    type: server.type,
+    errorName: server.error?.name,
+    error: server.error?.message
+  }));
+}
+
 export async function connectDb() {
   validateMongoUri(env.mongoUri);
 
@@ -36,11 +49,16 @@ export async function connectDb() {
     await mongoose.connect(env.mongoUri);
   } catch (error) {
     const host = getMongoHost(env.mongoUri);
+    const serverDetails = getServerSelectionDetails(error);
 
     if (error.message.includes('querySrv ENOTFOUND')) {
       throw new Error(
         `Could not resolve MongoDB Atlas host "${host}". Copy the exact connection string from Atlas, including the cluster-specific hostname.`
       );
+    }
+
+    if (serverDetails.length) {
+      error.message = `${error.message} Server details: ${JSON.stringify(serverDetails)}`;
     }
 
     throw error;

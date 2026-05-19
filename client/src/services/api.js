@@ -14,14 +14,20 @@ function getVoterId() {
 }
 
 async function request(path, options = {}) {
-  const response = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      'x-voter-id': getVoterId(),
-      ...(options.headers || {})
-    }
-  });
+  let response;
+
+  try {
+    response = await fetch(`${API_URL}${path}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        'x-voter-id': getVoterId(),
+        ...(options.headers || {})
+      }
+    });
+  } catch {
+    throw new Error(`Cannot reach the Demomojis API at ${API_URL}. Make sure the server is running and MongoDB Atlas allows your IP address.`);
+  }
 
   const payload = await response.json().catch(() => ({}));
 
